@@ -180,8 +180,8 @@ if __name__ == '__main__':
         wandb = True
         run_name = "test"
         group_name = "test"
-        max_epi_iter = 10000
-        # max_epi_iter = 100
+        # max_epi_iter = 10000
+        max_epi_iter = 100
         max_MC_iter = 100
         if_train_expert = True  # False
         if_roll_expert = True  # False
@@ -282,6 +282,7 @@ if __name__ == '__main__':
     #     print('step', i, 'agent 1 at', exp_s_list[i], 'agent 1 action', exp_a_list[i])
     import imageio
     imageio.mimsave("expert.gif", expert_frames)
+    wandb.log({"video/expert": wandb.Video("expert.gif", fps=4, format="gif")}, step=args.max_epi_iter)
 
     print('learnt trajectory')
     state = env.reset()
@@ -297,3 +298,4 @@ if __name__ == '__main__':
         if done:
             break
     imageio.mimsave("agent.gif", frames)
+    wandb.log({"video/agent": wandb.Video("agent.gif", fps=4, format="gif")}, step=args.max_epi_iter)
