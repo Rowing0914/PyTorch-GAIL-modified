@@ -1,6 +1,6 @@
 # Added video gen
-![image](https://github.com/Bigpig4396/PyTorch-Generative-Adversarial-Imitation-Learning-GAIL/blob/master/env.png)
-![image](https://github.com/Bigpig4396/PyTorch-Generative-Adversarial-Imitation-Learning-GAIL/blob/master/env.png)
+![image](https://github.com/Rowing0914/PyTorch-GAIL-modified/blob/main/agent.gif)
+![image](https://github.com/Rowing0914/PyTorch-GAIL-modified/blob/main/expert.gif)
 
 # PyTorch-Generative-Adversarial-Imitation-Learning-GAIL
 
