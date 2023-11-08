@@ -168,8 +168,8 @@ class REINFORCE(object):
 if __name__ == '__main__':
     torch.set_num_threads(1)
     env = EnvOppositeV4(9)
-    # max_epi_iter = 10000
-    max_epi_iter = 100
+    max_epi_iter = 10000
+    # max_epi_iter = 100
     max_MC_iter = 100
     if_train_expert = True  # False
     if_roll_expert = True  # False
@@ -220,33 +220,36 @@ if __name__ == '__main__':
             break
 
     # generative adversarial imitation learning from [exp_s_list, exp_a_list]
-    agent = GAIL(s_dim=2, N_action=5)
-    for epi_iter in range(max_epi_iter):
-        state = env.reset()
-        s1_list = []
-        a1_list = []
-        r1_list = []
-        log_pi_a1_list = []
-        acc_r = 0
-        for MC_iter in range(max_MC_iter):
-            action1, pi_a1, log_prob1 = agent.get_action(state)
-            s1_list.append(state)
-            a1_list.append(action1)
-            log_pi_a1_list.append(log_prob1)
-            next_state, reward, done, _ = env.step([action1, 0])
-            state = next_state
-            acc_r = acc_r + reward
-            r1_list.append(reward)
-            if done:
-                break
-        if (epi_iter % 100 == 0):
-            print('Imitate by GAIL, Episode', epi_iter, 'average reward', acc_r/MC_iter)
-        # train Discriminator
-        agent.train_D(s1_list, a1_list, exp_s_list, exp_a_list)
+    if if_train_agent:
+        agent = GAIL(s_dim=2, N_action=5)
+        for epi_iter in range(max_epi_iter):
+            state = env.reset()
+            s1_list = []
+            a1_list = []
+            r1_list = []
+            log_pi_a1_list = []
+            acc_r = 0
+            for MC_iter in range(max_MC_iter):
+                action1, pi_a1, log_prob1 = agent.get_action(state)
+                s1_list.append(state)
+                a1_list.append(action1)
+                log_pi_a1_list.append(log_prob1)
+                next_state, reward, done, _ = env.step([action1, 0])
+                state = next_state
+                acc_r = acc_r + reward
+                r1_list.append(reward)
+                if done:
+                    break
+            if (epi_iter % 100 == 0):
+                print('Imitate by GAIL, Episode', epi_iter, 'average reward', acc_r/MC_iter)
+            # train Discriminator
+            agent.train_D(s1_list, a1_list, exp_s_list, exp_a_list)
 
-        # train Generator
-        agent.train_G(s1_list, a1_list, log_pi_a1_list, r1_list, exp_s_list, exp_a_list)
-    agent.save_model()
+            # train Generator
+            agent.train_G(s1_list, a1_list, log_pi_a1_list, r1_list, exp_s_list, exp_a_list)
+        agent.save_model()
+    else:
+        agent.load_model()
 
     # learnt policy
     print('expert trajectory')
