@@ -37,7 +37,6 @@ class EnvOppositeV4(object):
         return state
 
     def step(self, action_list):
-        reward = 0
         # agent1 move
         if action_list[0] == 0:  # move up
             if self.occupancy[self.agt1_pos[0] - 1][self.agt1_pos[1]] != 1:  # if can move
@@ -60,12 +59,12 @@ class EnvOppositeV4(object):
                 self.occupancy[self.agt1_pos[0]][self.agt1_pos[1] - 1] = 0
                 self.occupancy[self.agt1_pos[0]][self.agt1_pos[1]] = 1
 
-        if self.agt1_pos == self.goal1_pos:
-            reward = reward + 5
-
+        reward = 0
         done = False
-        if reward == 5:
+        if self.agt1_pos == self.goal1_pos:
+            reward = 5
             done = True
+            
         next_state = self.get_state()
         return next_state, reward, done, {}
 
